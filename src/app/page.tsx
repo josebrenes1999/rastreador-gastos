@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { obtenerGastos, crearGasto, borrarGasto as borrarGastoDB } from "../actions";
+import styles from "./page.module.css"
 
 type Gasto = {
   id: number;
@@ -47,41 +48,47 @@ export default function Home() {
   }
 
   return (
-    <main>
-      <h1>Rastreador de Gastos</h1>
-      <p>Gasto total: { total }€</p>
+    <main className={styles.main}>
+      <h1 className={styles.titulo}>Rastreador de Gastos</h1>
+      <p className={styles.total}>Gasto total: { total }€</p>
       <ul>
         {gastos.map((gasto) => (
-          <li key={gasto.id}>
-            <p>Gasto: {gasto.monto}€</p>
-            <p>Categoría: {gasto.categoria}</p>
-            <p>Fecha: {gasto.fecha}</p>
-            <p>Descripción: {gasto.descripcion}</p>
-            <button onClick={()=> borrarGasto(gasto.id) }>Borrar</button>
+          <li className={styles.tarjeta} key={gasto.id}>
+            <p className={styles.montoGasto}>Gasto: {gasto.monto}€</p>
+            <p className={styles.detalle}>Categoría: {gasto.categoria}</p>
+            <p className={styles.detalle}>Fecha: {gasto.fecha}</p>
+            <p className={styles.detalle}>Descripción: {gasto.descripcion}</p>
+            <button className={styles.botonBorrar} onClick={()=> borrarGasto(gasto.id) }>Borrar</button>
           </li>
         ))}
       </ul>
-      <input
-        value={categoria}
-        placeholder="Categoria"
-        onChange={(e) => setCategoria(e.target.value)}
-      />
-      <input
-        value={descripcion}
-        placeholder="Descripción"
-        onChange={(e) => setDescripcion(e.target.value)}
-      />
-      <input
-        value={monto === 0 ? "" : monto}
-        placeholder="Importe"
-        onChange={(e) => setMonto(Number(e.target.value))}
-      />
-      <input
-        value={fecha}
-        placeholder="Fecha"
-        onChange={(e) => setFecha(e.target.value)}
-      />
-      <button onClick={agregarGasto}>Agregar gasto</button>
+      <div className={styles.formulario}>
+        <input
+          className={styles.input}
+          value={categoria}
+          placeholder="Categoria"
+          onChange={(e) => setCategoria(e.target.value)}
+        />
+        <input
+          className={styles.input}
+          value={descripcion}
+          placeholder="Descripción"
+          onChange={(e) => setDescripcion(e.target.value)}
+        />
+        <input
+          className={styles.input}
+          value={monto === 0 ? "" : monto}
+          placeholder="Importe"
+          onChange={(e) => setMonto(Number(e.target.value))}
+        />
+        <input
+          className={styles.input}
+          value={fecha}
+          placeholder="Fecha"
+          onChange={(e) => setFecha(e.target.value)}
+        />
+        <button className={styles.boton} onClick={agregarGasto}>Agregar gasto</button>
+      </div>
     </main>
   );
 }
