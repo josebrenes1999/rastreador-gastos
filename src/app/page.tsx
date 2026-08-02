@@ -1,47 +1,55 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { obtenerGastos, crearGasto, borrarGasto as borrarGastoDB } from "../actions";
+import { obtenerGastos, crearGasto, borrarGasto as borrarGastoDB, obtenerCategorias, crearCategoria } from "../actions";
 import styles from "./page.module.css"
+
+type Categoria = {
+  id: number;
+  nombre: string;
+  limite: number;
+  color: string;
+}
 
 type Gasto = {
   id: number;
   monto: number;
-  categoria: string;
-  fecha: string; // De momento, en un futuro será type Date
+  fecha: string;
   descripcion: string;
+  categoria: Categoria;
+  categoriaId: number;
 };
 
 export default function Home() {
   const [gastos, setGastos] = useState<Gasto[]>([]);
-  const [categoria, setCategoria] = useState("");
+  const [categoriaId, setCategoriaId] = useState(0);
   const [descripcion, setDescripcion] = useState("")
   const [monto, setMonto] = useState(0)
   const [fecha, setFecha] = useState("")
+  const [categorias, setCategorias] = useState<Categoria[]>([])
   const total = gastos.reduce((acumulado, gastoActual) => acumulado + gastoActual.monto, 0)
 
   useEffect(() => {
-  async function cargarDatos() {
-    const datos = await obtenerGastos();
-    setGastos(datos);
-  }
-  cargarDatos();
-}, []);
-  
-  async function agregarGasto(){
-  
-  await crearGasto(categoria, monto, fecha, descripcion)
+    async function cargarDatos() {
+      const datos = await obtenerGastos();
+      const datosCategorias = await obtenerCategorias();
+      setGastos(datos);
+      setCategorias(datosCategorias)
+    }
+    cargarDatos();
+  }, []);
 
-  const datos = await obtenerGastos();
-  setGastos(datos)
-  setCategoria("")
-  setDescripcion("")
-  setMonto(0)
-  setFecha("")
-}
+  async function agregarGasto(){
+    await crearGasto(categoriaId, monto, fecha, descripcion)
+    const datos = await obtenerGastos();
+    setGastos(datos)
+    setCategoriaId(0)
+    setDescripcion("")
+    setMonto(0)
+    setFecha("")
+  }
 
   async function borrarGasto(id: number) {
-    
     await borrarGastoDB(id);
     const datos = await obtenerGastos()
     setGastos(datos)
@@ -55,7 +63,7 @@ export default function Home() {
         {gastos.map((gasto) => (
           <li className={styles.tarjeta} key={gasto.id}>
             <p className={styles.montoGasto}>Gasto: {gasto.monto}€</p>
-            <p className={styles.detalle}>Categoría: {gasto.categoria}</p>
+            <p className={styles.detalle}>Categoría: {gasto.categoria.nombre}</p>
             <p className={styles.detalle}>Fecha: {gasto.fecha}</p>
             <p className={styles.detalle}>Descripción: {gasto.descripcion}</p>
             <button className={styles.botonBorrar} onClick={()=> borrarGasto(gasto.id) }>Borrar</button>
@@ -63,12 +71,11 @@ export default function Home() {
         ))}
       </ul>
       <div className={styles.formulario}>
-        <input
-          className={styles.input}
-          value={categoria}
-          placeholder="Categoria"
-          onChange={(e) => setCategoria(e.target.value)}
-        />
+        <select className={styles.input} value={categoriaId} onChange={(e) => setCategoriaId(Number(e.target.value))}>
+          {categorias.map((cat) => (
+            <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+          ))}
+        </select>
         <input
           className={styles.input}
           value={descripcion}
@@ -92,6 +99,3 @@ export default function Home() {
     </main>
   );
 }
-
-
-

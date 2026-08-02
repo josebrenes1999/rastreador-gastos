@@ -47,3 +47,7 @@ next-env.d.ts
 .claude/
 .windsurf/
 
+# base de datos local
+*.db
+*.db-journal
+dev.db

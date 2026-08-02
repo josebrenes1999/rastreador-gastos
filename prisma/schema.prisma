@@ -1,21 +1,25 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model Gasto {
-  id Int @id @default(autoincrement())
-  monto Float
-  categoria String
-  fecha String
+  id          Int       @id @default(autoincrement())
+  monto       Float
+  fecha       String
   descripcion String
+  categoriaId Int
+  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+}
+
+model Categoria {
+  id     Int     @id @default(autoincrement())
+  nombre String
+  limite Float
+  color  String
+  gastos Gasto[]
 }
