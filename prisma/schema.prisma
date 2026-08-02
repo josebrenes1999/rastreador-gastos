@@ -23,3 +23,11 @@ model Categoria {
   color  String
   gastos Gasto[]
 }
+
+model Usuario {
+  id              Int      @id @default(autoincrement())
+  nombre          String
+  email           String   @unique
+  contrasenaHash  String
+  creadoEn        DateTime @default(now())
+}

@@ -1,0 +1,71 @@
+.pantalla {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.tarjeta {
+  width: 100%;
+  max-width: 360px;
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--acento);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.titulo {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  background-color: var(--background);
+  color: var(--foreground);
+  font-size: 15px;
+}
+
+.boton {
+  padding: 10px 16px;
+  background-color: var(--acento);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.error {
+  color: var(--peligro);
+  font-size: 14px;
+}
+
+.enlaceTexto {
+  font-size: 14px;
+  color: var(--texto-apagado);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.enlaceTexto a {
+  color: var(--acento);
+  font-weight: 600;
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { obtenerGastos, crearGasto, borrarGasto as borrarGastoDB, obtenerCategorias, crearCategoria } from "../actions";
+import { obtenerGastos, crearGasto, borrarGasto as borrarGastoDB, obtenerCategorias, crearCategoria } from "../../actions";
 import styles from "./page.module.css"
 
 type Categoria = {
@@ -27,6 +27,9 @@ export default function Home() {
   const [monto, setMonto] = useState(0)
   const [fecha, setFecha] = useState("")
   const [categorias, setCategorias] = useState<Categoria[]>([])
+  const [nombreCategoria, setNombreCategoria] = useState("")
+  const [limiteCategoria, setLimiteCategoria] = useState(0)
+  const [colorCategoria, setColorCategoria] = useState("#2563eb")
   const total = gastos.reduce((acumulado, gastoActual) => acumulado + gastoActual.monto, 0)
 
   useEffect(() => {
@@ -35,6 +38,9 @@ export default function Home() {
       const datosCategorias = await obtenerCategorias();
       setGastos(datos);
       setCategorias(datosCategorias)
+      if (datosCategorias.length > 0) {
+        setCategoriaId(datosCategorias[0].id)
+      }
     }
     cargarDatos();
   }, []);
@@ -47,6 +53,18 @@ export default function Home() {
     setDescripcion("")
     setMonto(0)
     setFecha("")
+  }
+
+  async function agregarCategoria() {
+    await crearCategoria(nombreCategoria, limiteCategoria, colorCategoria)
+    const datosCategorias = await obtenerCategorias()
+    setCategorias(datosCategorias)
+    if (categoriaId === 0 && datosCategorias.length > 0) {
+      setCategoriaId(datosCategorias[0].id)
+    }
+    setNombreCategoria("")
+    setLimiteCategoria(0)
+    setColorCategoria("#2563eb")
   }
 
   async function borrarGasto(id: number) {
@@ -95,6 +113,28 @@ export default function Home() {
           onChange={(e) => setFecha(e.target.value)}
         />
         <button className={styles.boton} onClick={agregarGasto}>Agregar gasto</button>
+      </div>
+      <div className={styles.formulario}>
+        <h2>Nueva categoría</h2>
+        <input
+          className={styles.input}
+          value={nombreCategoria}
+          placeholder="Nombre"
+          onChange={(e) => setNombreCategoria(e.target.value)}
+        />
+        <input
+          className={styles.input}
+          value={limiteCategoria === 0 ? "" : limiteCategoria}
+          placeholder="Límite"
+          onChange={(e) => setLimiteCategoria(Number(e.target.value))}
+        />
+        <input
+          className={styles.input}
+          type="color"
+          value={colorCategoria}
+          onChange={(e) => setColorCategoria(e.target.value)}
+        />
+        <button className={styles.boton} onClick={agregarCategoria}>Agregar categoría</button>
       </div>
     </main>
   );
