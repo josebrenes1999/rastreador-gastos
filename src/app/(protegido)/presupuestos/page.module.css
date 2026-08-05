@@ -1,0 +1,386 @@
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.titulo {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.subtitulo {
+  font-size: 14px;
+  color: var(--texto-apagado);
+  max-width: 640px;
+}
+
+.filaSuperior {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tarjeta {
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.etiqueta {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--texto-apagado);
+  margin-bottom: 12px;
+}
+
+.estadoGeneralFila {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.estadoGeneralInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gastoTotal {
+  font-size: 18px;
+}
+
+.gastoTotal strong {
+  font-size: 22px;
+}
+
+.barraProgreso {
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--superficie-hover);
+  overflow: hidden;
+}
+
+.barraRelleno {
+  height: 100%;
+  background-color: var(--acento);
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.detalleEstado {
+  font-size: 13px;
+  color: var(--texto-apagado);
+}
+
+.porcentajeCaja {
+  flex-shrink: 0;
+  background-color: var(--superficie-hover);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--acento);
+  white-space: nowrap;
+}
+
+.tarjetaDestacada {
+  background-color: var(--acento);
+  border: none;
+  color: #0a0a0a;
+}
+
+.tarjetaDestacada .etiqueta {
+  color: rgba(10, 10, 10, 0.6);
+}
+
+.nombreDestacado {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.montoDestacado {
+  font-size: 14px;
+  color: rgba(10, 10, 10, 0.75);
+  margin-top: 2px;
+}
+
+.mensajePositivo {
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+.aviso {
+  font-size: 14px;
+  color: rgba(10, 10, 10, 0.75);
+}
+
+.gridCategorias {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.tarjetaCategoria {
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.categoriaCabecera {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.puntoColor {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.nombreCategoria {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.montos {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.limiteTexto {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--texto-apagado);
+}
+
+.barraFina {
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--superficie-hover);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.barraFinaRelleno {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.barraFinaRelleno.estadoSaludable {
+  background-color: var(--acento);
+}
+
+.barraFinaRelleno.estadoControlado {
+  background-color: var(--info);
+}
+
+.barraFinaRelleno.estadoAlerta {
+  background-color: var(--peligro);
+}
+
+.barraFinaRelleno.estadoCompletado {
+  background-color: var(--acento);
+}
+
+.piePresupuesto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.badgeEstado {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.badgeEstado.estadoSaludable {
+  background-color: rgba(45, 212, 191, 0.15);
+  color: var(--acento);
+}
+
+.badgeEstado.estadoControlado {
+  background-color: rgba(96, 165, 250, 0.15);
+  color: var(--info);
+}
+
+.badgeEstado.estadoAlerta {
+  background-color: rgba(220, 38, 38, 0.15);
+  color: var(--peligro);
+}
+
+.badgeEstado.estadoCompletado {
+  background-color: var(--superficie-hover);
+  color: var(--texto-apagado);
+}
+
+.textoRestante {
+  font-size: 12px;
+  color: var(--texto-apagado);
+  white-space: nowrap;
+}
+
+.tarjetaAnadir {
+  border: 2px dashed var(--borde);
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--texto-apagado);
+  cursor: pointer;
+}
+
+.masIcono {
+  font-size: 26px;
+  font-weight: 300;
+  margin-bottom: 6px;
+}
+
+.tituloAnadir {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.subtextoAnadir {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.formularioAnadir {
+  width: 100%;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  cursor: default;
+}
+
+.etiquetaCampo {
+  font-size: 12px;
+  color: var(--texto-apagado);
+  margin-top: 6px;
+}
+
+.input {
+  padding: 10px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.paletaColores {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.swatch:hover {
+  transform: scale(1.1);
+}
+
+.swatchSeleccionado {
+  border-color: var(--foreground);
+}
+
+.swatchPersonalizado {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.botonesFormAnadir {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.boton {
+  padding: 10px 16px;
+  background-color: var(--acento);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton:hover {
+  background-color: var(--acento-oscuro);
+}
+
+.botonSecundario {
+  padding: 10px 16px;
+  background: none;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  color: var(--texto-apagado);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botonSecundario:hover {
+  background-color: var(--superficie-hover);
+}
+
+@media (max-width: 800px) {
+  .filaSuperior {
+    grid-template-columns: 1fr;
+  }
+
+  .estadoGeneralFila {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

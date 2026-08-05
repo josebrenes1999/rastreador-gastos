@@ -22,7 +22,7 @@ function Sidebar({ nombre, email }: SidebarProps) {
 
   return (
     <aside className={styles.sidebar}>
-      <p className={styles.logo}>FinTrack</p>
+      <p className={styles.logo}>Gastitos</p>
       <div className={styles.usuario}>
         <div className={styles.avatar} />
         <div>

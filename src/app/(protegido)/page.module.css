@@ -1,77 +1,321 @@
 .main {
-  max-width: 600px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 40px 32px;
   display: flex;
   flex-direction: column;
+  gap: 24px;
+}
+
+.cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .titulo {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.total {
   font-size: 28px;
+  font-weight: 700;
+  color: var(--acento);
+}
+
+.subtitulo {
+  font-size: 14px;
+  color: var(--texto-apagado);
+}
+
+.filaSuperior {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tarjeta {
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjetaCabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.etiqueta {
+  font-size: 12px;
   font-weight: 600;
-  color: #2563eb;
-  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+  color: var(--texto-apagado);
 }
 
-.input {
-  padding: 10px 20px;
-  border: 1px solid #ccc;
+.botonIcono {
+  background: none;
+  border: 1px solid var(--borde);
   border-radius: 6px;
-  font-size: 16px;
+  color: var(--texto-apagado);
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
+.botonIcono:hover {
+  background-color: var(--superficie-hover);
+  color: var(--foreground);
+}
+
+.gastoTotal {
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+.gastoTotal strong {
+  color: var(--acento);
+}
+
+.tituloTarjeta {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.miniStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.miniStat {
+  background-color: var(--superficie-hover);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.miniStatAncho {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.miniEtiqueta {
+  font-size: 12px;
+  color: var(--texto-apagado);
+}
+
+.miniValor {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.positivo {
+  color: var(--acento);
+}
+
+.negativo {
+  color: var(--peligro);
+}
+
+.formularioConfig,
 .formulario {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+}
+
+.etiquetaCampo {
+  font-size: 12px;
+  color: var(--texto-apagado);
+  margin-top: 6px;
+}
+
+.input {
+  padding: 10px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.filaDoble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 24px;
+}
+
+.filaCategoria {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.botonSecundario {
+  padding: 10px 14px;
+  background: none;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  color: var(--acento);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.botonSecundario:hover {
+  background-color: var(--superficie-hover);
+}
+
+.anclaDesplegable {
+  position: relative;
+}
+
+.subFormulario {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 260px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.paletaColores {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.swatch:hover {
+  transform: scale(1.1);
+}
+
+.swatchSeleccionado {
+  border-color: var(--foreground);
+}
+
+.swatchPersonalizado {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .boton {
   padding: 10px 16px;
-  background-color: #2563eb;
-  color: white;
+  background-color: var(--acento);
+  color: #0a0a0a;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  margin-top: 14px;
 }
 
-.tarjeta {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 12px;
-  list-style: none;
+.boton:hover {
+  background-color: var(--acento-oscuro);
+}
+
+.aviso {
+  font-size: 14px;
+  color: var(--texto-apagado);
+}
+
+.tablaContenedor {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--texto-apagado);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla td {
+  padding: 12px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--borde);
+  white-space: nowrap;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.celdaApagada {
+  color: var(--texto-apagado);
+}
+
+.importe {
+  font-weight: 600;
+  color: var(--peligro);
 }
 
 .botonBorrar {
-  padding: 6px 12px;
-  background-color: #dc2626;
-  color: white;
+  background: none;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
   cursor: pointer;
-  margin-top: 8px;
-}
-
-.montoGasto {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.detalle {
   font-size: 14px;
-  color: #999;
-  margin-bottom: 2px;
+  opacity: 0.7;
+}
+
+.botonBorrar:hover {
+  opacity: 1;
+}
+
+@media (max-width: 800px) {
+  .filaSuperior {
+    grid-template-columns: 1fr;
+  }
+
+  .miniStats {
+    grid-template-columns: 1fr;
+  }
 }
