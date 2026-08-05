@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cerrarSesion } from "../authActions";
@@ -19,31 +20,46 @@ type SidebarProps = {
 
 function Sidebar({ nombre, email }: SidebarProps) {
   const pathname = usePathname();
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   return (
     <aside className={styles.sidebar}>
-      <p className={styles.logo}>Gastitos</p>
-      <div className={styles.usuario}>
-        <div className={styles.avatar} />
-        <div>
-          <p className={styles.nombre}>{nombre}</p>
-          <p className={styles.plan}>{email}</p>
-        </div>
+      <div className={styles.cabeceraMovil}>
+        <p className={styles.logo}>Gastitos</p>
+        <button
+          type="button"
+          className={styles.botonMenu}
+          aria-label="Abrir menú"
+          onClick={() => setMenuAbierto(!menuAbierto)}
+        >
+          ☰
+        </button>
       </div>
-      <nav className={styles.nav}>
-        {enlaces.map((enlace) => (
-          <Link
-            key={enlace.href}
-            href={enlace.href}
-            className={`${styles.enlace} ${pathname === enlace.href ? styles.activo : ""}`}
-          >
-            {enlace.etiqueta}
-          </Link>
-        ))}
-      </nav>
-      <button className={styles.cerrarSesion} onClick={() => cerrarSesion()}>
-        Cerrar sesión
-      </button>
+
+      <div className={`${styles.panel} ${menuAbierto ? styles.panelAbierto : ""}`}>
+        <div className={styles.usuario}>
+          <div className={styles.avatar} />
+          <div>
+            <p className={styles.nombre}>{nombre}</p>
+            <p className={styles.plan}>{email}</p>
+          </div>
+        </div>
+        <nav className={styles.nav}>
+          {enlaces.map((enlace) => (
+            <Link
+              key={enlace.href}
+              href={enlace.href}
+              className={`${styles.enlace} ${pathname === enlace.href ? styles.activo : ""}`}
+              onClick={() => setMenuAbierto(false)}
+            >
+              {enlace.etiqueta}
+            </Link>
+          ))}
+        </nav>
+        <button className={styles.cerrarSesion} onClick={() => cerrarSesion()}>
+          Cerrar sesión
+        </button>
+      </div>
     </aside>
   );
 }

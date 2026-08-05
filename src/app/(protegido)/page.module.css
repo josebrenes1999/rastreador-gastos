@@ -155,6 +155,7 @@
 .filaCategoria {
   display: flex;
   align-items: flex-end;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -311,11 +312,29 @@
 }
 
 @media (max-width: 800px) {
+  .main {
+    padding: 24px 16px;
+  }
+
   .filaSuperior {
     grid-template-columns: 1fr;
   }
 
   .miniStats {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta {
+    padding: 20px;
+  }
+
+  .subFormulario {
+    width: min(260px, calc(100vw - 64px));
+  }
+}
+
+@media (max-width: 480px) {
+  .filaDoble {
     grid-template-columns: 1fr;
   }
 }

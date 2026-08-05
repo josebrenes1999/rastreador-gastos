@@ -375,6 +375,10 @@
 }
 
 @media (max-width: 800px) {
+  .main {
+    padding: 24px 16px;
+  }
+
   .filaSuperior {
     grid-template-columns: 1fr;
   }
@@ -382,5 +386,14 @@
   .estadoGeneralFila {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .tarjeta,
+  .tarjetaCategoria {
+    padding: 20px;
+  }
+
+  .porcentajeCaja {
+    text-align: center;
   }
 }
