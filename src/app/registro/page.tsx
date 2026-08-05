@@ -27,7 +27,7 @@ export default function Registro() {
   return (
     <main className={styles.pantalla}>
       <div className={styles.tarjeta}>
-        <p className={styles.logo}>FinTrack</p>
+        <p className={styles.logo}>Gastitos</p>
         <h1 className={styles.titulo}>Crear cuenta</h1>
         {error && <p className={styles.error}>{error}</p>}
         <input
