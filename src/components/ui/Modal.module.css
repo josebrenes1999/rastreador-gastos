@@ -1,0 +1,47 @@
+.fondo {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.tarjeta {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.titulo {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.botonCerrar {
+  background: none;
+  border: none;
+  color: var(--texto-apagado);
+  font-size: 16px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+}
+
+.botonCerrar:hover {
+  color: var(--foreground);
+}

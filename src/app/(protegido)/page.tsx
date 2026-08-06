@@ -1,27 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   obtenerGastos,
-  crearGasto,
-  borrarGasto as borrarGastoDB,
+  obtenerIngresos,
   obtenerCategorias,
-  crearCategoria,
   obtenerConfiguracion,
   actualizarConfiguracion,
+  borrarGasto as borrarGastoDB,
+  borrarIngreso as borrarIngresoDB,
 } from "../../actions";
-import { calcularDiaCiclo } from "../../lib/ciclo";
-import { coloresPredefinidos } from "../../lib/colores";
+import { calcularDiaCiclo, estaEnCicloActual } from "../../lib/ciclo";
 import { textoADecimal, decimalATexto } from "../../lib/numeros";
-import CampoDecimal from "../../components/CampoDecimal";
+import type { Categoria, Movimiento } from "../../lib/movimientos";
+import CampoDecimal from "../../components/ui/CampoDecimal";
+import ModalEditarMovimiento from "../../components/movimientos/ModalEditarMovimiento";
+import IconoEditar from "../../components/ui/IconoEditar";
 import styles from "./page.module.css";
-
-type Categoria = {
-  id: number;
-  nombre: string;
-  limite: number;
-  color: string;
-};
 
 type Gasto = {
   id: number;
@@ -32,23 +28,63 @@ type Gasto = {
   categoriaId: number;
 };
 
+type Ingreso = {
+  id: number;
+  monto: number;
+  fecha: Date;
+  descripcion: string;
+};
+
 type Configuracion = {
   presupuestoMensual: number;
   cicloInicio: Date;
   cicloDuracionDias: number;
 };
 
+function IconoBalance() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+      <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+      <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+    </svg>
+  );
+}
+
+function IconoIngreso() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+      <polyline points="16 7 22 7 22 13" />
+    </svg>
+  );
+}
+
+function IconoGasto() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="22 17 13.5 8.5 8.5 13.5 2 7" />
+      <polyline points="16 17 22 17 22 11" />
+    </svg>
+  );
+}
+
+function IconoInfo() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [gastos, setGastos] = useState<Gasto[]>([]);
-  const [categoriaId, setCategoriaId] = useState(0);
-  const [descripcion, setDescripcion] = useState("");
-  const [monto, setMonto] = useState("");
-  const [fecha, setFecha] = useState("");
+  const [ingresos, setIngresos] = useState<Ingreso[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [nombreCategoria, setNombreCategoria] = useState("");
-  const [limiteCategoria, setLimiteCategoria] = useState("");
-  const [colorCategoria, setColorCategoria] = useState(coloresPredefinidos[0]);
-  const [mostrarFormCategoria, setMostrarFormCategoria] = useState(false);
+
+  const [editando, setEditando] = useState<Movimiento | null>(null);
 
   const [configuracion, setConfiguracion] = useState<Configuracion | null>(null);
   const [editandoConfig, setEditandoConfig] = useState(false);
@@ -56,20 +92,63 @@ export default function Home() {
   const [cicloInicioInput, setCicloInicioInput] = useState("");
   const [cicloDuracionInput, setCicloDuracionInput] = useState(30);
 
-  const gastoTotal = gastos.reduce((acumulado, gastoActual) => acumulado + gastoActual.monto, 0);
+  const gastosDelCiclo = configuracion
+    ? gastos.filter((g) => estaEnCicloActual(g.fecha, configuracion.cicloInicio, configuracion.cicloDuracionDias))
+    : [];
+  const gastoTotal = gastosDelCiclo.reduce((acumulado, gastoActual) => acumulado + gastoActual.monto, 0);
   const restante = configuracion ? configuracion.presupuestoMensual - gastoTotal : 0;
   const diaCiclo = configuracion ? calcularDiaCiclo(configuracion.cicloInicio, configuracion.cicloDuracionDias) : 0;
+  const diasRestantes = configuracion ? Math.max(configuracion.cicloDuracionDias - diaCiclo, 0) : 0;
+  const pctUsado =
+    configuracion && configuracion.presupuestoMensual > 0
+      ? Math.min((gastoTotal / configuracion.presupuestoMensual) * 100, 100)
+      : 0;
+  const pctRestante =
+    configuracion && configuracion.presupuestoMensual > 0
+      ? Math.round((restante / configuracion.presupuestoMensual) * 100)
+      : 0;
+
+  const ingresosDelCiclo = configuracion
+    ? ingresos.filter((i) => estaEnCicloActual(i.fecha, configuracion.cicloInicio, configuracion.cicloDuracionDias))
+    : [];
+  const ingresoTotal = ingresosDelCiclo.reduce((acumulado, ingresoActual) => acumulado + ingresoActual.monto, 0);
+  const balance = ingresoTotal - gastoTotal;
+
+  const distribucionCategorias = categorias
+    .map((cat) => {
+      const gastado = gastosDelCiclo.filter((g) => g.categoriaId === cat.id).reduce((acumulado, g) => acumulado + g.monto, 0);
+      const pct = gastoTotal > 0 ? (gastado / gastoTotal) * 100 : 0;
+      return { ...cat, gastado, pct };
+    })
+    .filter((c) => c.gastado > 0)
+    .sort((a, b) => b.pct - a.pct);
+
+  const movimientos: Movimiento[] = [
+    ...gastos.map(
+      (g): Movimiento => ({
+        tipo: "gasto",
+        id: g.id,
+        monto: g.monto,
+        fecha: g.fecha,
+        descripcion: g.descripcion,
+        categoria: g.categoria,
+        categoriaId: g.categoriaId,
+      })
+    ),
+    ...ingresos.map((i): Movimiento => ({ tipo: "ingreso", id: i.id, monto: i.monto, fecha: i.fecha, descripcion: i.descripcion })),
+  ]
+    .sort((a, b) => b.fecha.getTime() - a.fecha.getTime())
+    .slice(0, 5);
 
   useEffect(() => {
     async function cargarDatos() {
       const datos = await obtenerGastos();
+      const datosIngresos = await obtenerIngresos();
       const datosCategorias = await obtenerCategorias();
       const config = await obtenerConfiguracion();
       setGastos(datos);
+      setIngresos(datosIngresos);
       setCategorias(datosCategorias);
-      if (datosCategorias.length > 0) {
-        setCategoriaId(datosCategorias[0].id);
-      }
       setConfiguracion(config);
       setPresupuestoInput(decimalATexto(config.presupuestoMensual));
       setCicloInicioInput(config.cicloInicio.toISOString().slice(0, 10));
@@ -78,32 +157,22 @@ export default function Home() {
     cargarDatos();
   }, []);
 
-  async function agregarGasto() {
-    await crearGasto(categoriaId, textoADecimal(monto), fecha, descripcion);
-    const datos = await obtenerGastos();
-    setGastos(datos);
-    setDescripcion("");
-    setMonto("");
-    setFecha("");
-  }
-
-  async function agregarCategoria() {
-    await crearCategoria(nombreCategoria, textoADecimal(limiteCategoria), colorCategoria);
-    const datosCategorias = await obtenerCategorias();
-    setCategorias(datosCategorias);
-    if (categoriaId === 0 && datosCategorias.length > 0) {
-      setCategoriaId(datosCategorias[0].id);
+  async function borrarMovimiento(movimiento: Movimiento) {
+    if (movimiento.tipo === "gasto") {
+      await borrarGastoDB(movimiento.id);
+    } else {
+      await borrarIngresoDB(movimiento.id);
     }
-    setNombreCategoria("");
-    setLimiteCategoria("");
-    setColorCategoria(coloresPredefinidos[0]);
-    setMostrarFormCategoria(false);
+    const [datos, datosIngresos] = await Promise.all([obtenerGastos(), obtenerIngresos()]);
+    setGastos(datos);
+    setIngresos(datosIngresos);
   }
 
-  async function borrarGasto(id: number) {
-    await borrarGastoDB(id);
-    const datos = await obtenerGastos();
+  async function recargarMovimientos() {
+    const [datos, datosIngresos] = await Promise.all([obtenerGastos(), obtenerIngresos()]);
     setGastos(datos);
+    setIngresos(datosIngresos);
+    setEditando(null);
   }
 
   async function guardarConfiguracion() {
@@ -120,17 +189,55 @@ export default function Home() {
         <p className={styles.subtitulo}>Gestiona tus finanzas con precisión y transparencia.</p>
       </header>
 
+      <div className={styles.filaStats}>
+        <section className={styles.tarjeta}>
+          <div className={styles.statCabecera}>
+            <span className={styles.etiqueta}>TOTAL BALANCE</span>
+            <span className={`${styles.statIcono} ${styles.iconoAcento}`}>
+              <IconoBalance />
+            </span>
+          </div>
+          <p className={`${styles.statValor} ${balance < 0 ? styles.negativo : styles.positivo}`}>
+            {balance.toFixed(2)}€
+          </p>
+        </section>
+
+        <section className={styles.tarjeta}>
+          <div className={styles.statCabecera}>
+            <span className={styles.etiqueta}>INGRESOS</span>
+            <span className={`${styles.statIcono} ${styles.iconoAcento}`}>
+              <IconoIngreso />
+            </span>
+          </div>
+          <p className={`${styles.statValor} ${styles.positivo}`}>{ingresoTotal.toFixed(2)}€</p>
+        </section>
+
+        <section className={styles.tarjeta}>
+          <div className={styles.statCabecera}>
+            <span className={styles.etiqueta}>GASTO TOTAL</span>
+            <span className={`${styles.statIcono} ${styles.iconoPeligro}`}>
+              <IconoGasto />
+            </span>
+          </div>
+          <p className={`${styles.statValor} ${styles.negativo}`}>{gastoTotal.toFixed(2)}€</p>
+        </section>
+      </div>
+
       <div className={styles.filaSuperior}>
         <section className={styles.tarjeta}>
           <div className={styles.tarjetaCabecera}>
-            <span className={styles.etiqueta}>RESUMEN GENERAL</span>
-            <button className={styles.botonIcono} onClick={() => setEditandoConfig(!editandoConfig)}>
-              ⚙
-            </button>
+            <span className={styles.etiqueta}>PROGRESO DEL PRESUPUESTO</span>
+            <div className={styles.cabeceraAcciones}>
+              {!editandoConfig && configuracion && (
+                <span className={`${styles.pctRestante} ${pctRestante < 0 ? styles.negativo : styles.positivo}`}>
+                  {pctRestante}% Restante
+                </span>
+              )}
+              <button className={styles.botonIcono} onClick={() => setEditandoConfig(!editandoConfig)}>
+                ⚙
+              </button>
+            </div>
           </div>
-          <p className={styles.gastoTotal}>
-            Gasto Total: <strong>{gastoTotal.toFixed(2)}€</strong>
-          </p>
 
           {editandoConfig ? (
             <div className={styles.formularioConfig}>
@@ -155,140 +262,66 @@ export default function Home() {
             </div>
           ) : (
             configuracion && (
-              <div className={styles.miniStats}>
-                <div className={styles.miniStat}>
-                  <span className={styles.miniEtiqueta}>Presupuesto</span>
-                  <span className={styles.miniValor}>{configuracion.presupuestoMensual.toFixed(2)}€</span>
+              <>
+                <div className={styles.barraProgreso}>
+                  <div className={styles.barraRelleno} style={{ width: `${pctUsado}%` }} />
                 </div>
-                <div className={styles.miniStat}>
-                  <span className={styles.miniEtiqueta}>Restante</span>
-                  <span className={`${styles.miniValor} ${restante < 0 ? styles.negativo : styles.positivo}`}>
-                    {restante.toFixed(2)}€
-                  </span>
+                <div className={styles.filaPresupuestoMensual}>
+                  <span>Presupuesto Mensual</span>
+                  <span>{configuracion.presupuestoMensual.toFixed(2)}€</span>
                 </div>
-                <div className={`${styles.miniStat} ${styles.miniStatAncho}`}>
-                  <span className={styles.miniEtiqueta}>Días del Ciclo</span>
-                  <span className={styles.miniValor}>
-                    {diaCiclo} / {configuracion.cicloDuracionDias}
-                  </span>
+                <div className={styles.dosCajas}>
+                  <div className={styles.cajaMini}>
+                    <span className={styles.cajaEtiqueta}>Gastado</span>
+                    <span className={`${styles.cajaValor} ${styles.negativo}`}>{gastoTotal.toFixed(2)}€</span>
+                  </div>
+                  <div className={styles.cajaMini}>
+                    <span className={styles.cajaEtiqueta}>Disponible</span>
+                    <span className={`${styles.cajaValor} ${restante < 0 ? styles.negativo : styles.positivo}`}>
+                      {restante.toFixed(2)}€
+                    </span>
+                  </div>
                 </div>
-              </div>
+                <div className={styles.infoCiclo}>
+                  <IconoInfo />
+                  <span>Te quedan {diasRestantes} días en este ciclo.</span>
+                </div>
+              </>
             )
           )}
         </section>
 
         <section className={styles.tarjeta}>
-          <h2 className={styles.tituloTarjeta}>Agregar Gasto</h2>
-          <div className={styles.formulario}>
-            <div className={styles.filaCategoria}>
-              <div className={styles.campo} style={{ flex: 1 }}>
-                <label className={styles.etiquetaCampo}>Categoría</label>
-                {categorias.length > 0 ? (
-                  <select
-                    className={styles.input}
-                    value={categoriaId}
-                    onChange={(e) => setCategoriaId(Number(e.target.value))}
-                  >
-                    {categorias.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.nombre}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <p className={styles.aviso}>Aún no tienes categorías.</p>
-                )}
-              </div>
-              <div className={styles.anclaDesplegable}>
-                <button
-                  type="button"
-                  className={styles.botonSecundario}
-                  onClick={() => setMostrarFormCategoria(!mostrarFormCategoria)}
-                >
-                  + Nueva categoría
-                </button>
-
-                {mostrarFormCategoria && (
-                  <div className={styles.subFormulario}>
-                    <label className={styles.etiquetaCampo}>Nombre</label>
-                    <input
-                      className={styles.input}
-                      value={nombreCategoria}
-                      placeholder="Ej: Alimentación"
-                      onChange={(e) => setNombreCategoria(e.target.value)}
-                    />
-                    <label className={styles.etiquetaCampo}>Límite mensual</label>
-                    <CampoDecimal
-                      className={styles.input}
-                      placeholder="0,00€"
-                      valor={limiteCategoria}
-                      onCambiar={setLimiteCategoria}
-                    />
-                    <label className={styles.etiquetaCampo}>Color</label>
-                    <div className={styles.paletaColores}>
-                      {coloresPredefinidos.map((c) => (
-                        <button
-                          key={c}
-                          type="button"
-                          aria-label={`Elegir color ${c}`}
-                          className={`${styles.swatch} ${colorCategoria === c ? styles.swatchSeleccionado : ""}`}
-                          style={{ backgroundColor: c }}
-                          onClick={() => setColorCategoria(c)}
-                        />
-                      ))}
-                      <input
-                        className={styles.swatchPersonalizado}
-                        type="color"
-                        title="Color personalizado"
-                        value={colorCategoria}
-                        onChange={(e) => setColorCategoria(e.target.value)}
-                      />
-                    </div>
-                    <button className={styles.boton} onClick={agregarCategoria}>
-                      Crear categoría
-                    </button>
+          <h2 className={styles.tituloTarjeta}>Categorías</h2>
+          {distribucionCategorias.length === 0 ? (
+            <p className={styles.aviso}>Todavía no hay gastos en este ciclo.</p>
+          ) : (
+            <div className={styles.listaCategorias}>
+              {distribucionCategorias.map((cat) => (
+                <div key={cat.id} className={styles.filaCategoriaDist}>
+                  <div className={styles.filaCategoriaCabecera}>
+                    <span className={styles.nombreCategoriaDist}>{cat.nombre}</span>
+                    <span className={styles.pctCategoriaDist}>{cat.pct.toFixed(0)}%</span>
                   </div>
-                )}
-              </div>
-            </div>
-
-            {categorias.length > 0 && (
-              <>
-                <label className={styles.etiquetaCampo}>Descripción</label>
-                <input
-                  className={styles.input}
-                  value={descripcion}
-                  placeholder="Ej: Compra semanal"
-                  onChange={(e) => setDescripcion(e.target.value)}
-                />
-                <div className={styles.filaDoble}>
-                  <div className={styles.campo}>
-                    <label className={styles.etiquetaCampo}>Importe</label>
-                    <CampoDecimal className={styles.input} placeholder="0,00€" valor={monto} onCambiar={setMonto} />
-                  </div>
-                  <div className={styles.campo}>
-                    <label className={styles.etiquetaCampo}>Fecha</label>
-                    <input
-                      className={styles.input}
-                      type="date"
-                      value={fecha}
-                      onChange={(e) => setFecha(e.target.value)}
-                    />
+                  <div className={styles.barraFina}>
+                    <div className={styles.barraFinaRelleno} style={{ width: `${cat.pct}%`, backgroundColor: cat.color }} />
                   </div>
                 </div>
-                <button className={styles.boton} onClick={agregarGasto}>
-                  Agregar Gasto
-                </button>
-              </>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
 
       <section className={styles.tarjeta}>
-        <h2 className={styles.tituloTarjeta}>Lista de Gastos</h2>
-        {gastos.length === 0 ? (
-          <p className={styles.aviso}>Todavía no hay gastos registrados.</p>
+        <div className={styles.tarjetaCabecera}>
+          <h2 className={styles.tituloTarjeta}>Últimos Movimientos</h2>
+          <Link href="/transacciones" className={styles.enlaceVerTodo}>
+            Ver todo
+          </Link>
+        </div>
+        {movimientos.length === 0 ? (
+          <p className={styles.aviso}>Todavía no hay movimientos registrados.</p>
         ) : (
           <div className={styles.tablaContenedor}>
             <table className={styles.tabla}>
@@ -302,25 +335,37 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                {gastos.map((gasto) => (
-                  <tr key={gasto.id}>
-                    <td>{gasto.descripcion}</td>
+                {movimientos.map((mov) => (
+                  <tr key={`${mov.tipo}-${mov.id}`}>
+                    <td>{mov.descripcion}</td>
                     <td>
-                      <span
-                        className={styles.badge}
-                        style={{ backgroundColor: `${gasto.categoria.color}26`, color: gasto.categoria.color }}
-                      >
-                        {gasto.categoria.nombre.toUpperCase()}
-                      </span>
+                      {mov.tipo === "gasto" ? (
+                        <span
+                          className={styles.badge}
+                          style={{ backgroundColor: `${mov.categoria.color}26`, color: mov.categoria.color }}
+                        >
+                          {mov.categoria.nombre.toUpperCase()}
+                        </span>
+                      ) : (
+                        <span className={`${styles.badge} ${styles.badgeIngreso}`}>INGRESO</span>
+                      )}
                     </td>
                     <td className={styles.celdaApagada}>
-                      {gasto.fecha.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" })}
+                      {mov.fecha.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" })}
                     </td>
-                    <td className={styles.importe}>-{gasto.monto.toFixed(2)}€</td>
+                    <td className={mov.tipo === "gasto" ? styles.importeNegativo : styles.importePositivo}>
+                      {mov.tipo === "gasto" ? "-" : "+"}
+                      {mov.monto.toFixed(2)}€
+                    </td>
                     <td>
-                      <button className={styles.botonBorrar} onClick={() => borrarGasto(gasto.id)}>
-                        🗑
-                      </button>
+                      <div className={styles.accionesFila}>
+                        <button className={styles.botonEditar} onClick={() => setEditando(mov)}>
+                          <IconoEditar />
+                        </button>
+                        <button className={styles.botonBorrar} onClick={() => borrarMovimiento(mov)}>
+                          🗑
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -329,6 +374,15 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {editando && (
+        <ModalEditarMovimiento
+          movimiento={editando}
+          categorias={categorias}
+          onCerrar={() => setEditando(null)}
+          onGuardado={recargarMovimientos}
+        />
+      )}
     </main>
   );
 }

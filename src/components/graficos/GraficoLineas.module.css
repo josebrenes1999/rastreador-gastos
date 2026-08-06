@@ -1,0 +1,71 @@
+.contenedor {
+  position: relative;
+  width: 100%;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.eje {
+  stroke: var(--borde);
+  stroke-width: 1;
+}
+
+.area {
+  fill: var(--acento);
+  opacity: 0.12;
+  stroke: none;
+}
+
+.linea {
+  fill: none;
+  stroke: var(--acento);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.punto {
+  fill: var(--acento);
+  stroke: var(--superficie);
+  stroke-width: 2;
+  transition: r 0.1s ease;
+}
+
+.crosshair {
+  stroke: var(--texto-apagado);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.etiquetaEje {
+  font-size: 10px;
+  fill: var(--texto-apagado);
+}
+
+.tooltip {
+  position: absolute;
+  transform: translate(-50%, -115%);
+  background-color: var(--superficie-hover);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 6px 10px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.tooltipEtiqueta {
+  font-size: 11px;
+  color: var(--texto-apagado);
+  text-transform: capitalize;
+}
+
+.tooltipValor {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}

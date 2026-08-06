@@ -32,6 +32,32 @@ export async function crearGasto(categoriaId: number, monto: number, fecha: stri
   return nuevoGasto;
 }
 
+export async function actualizarGasto(
+  id: number,
+  categoriaId: number,
+  monto: number,
+  fecha: string,
+  descripcion: string
+) {
+  const usuarioId = await obtenerUsuarioId();
+  const gasto = await prisma.gasto.findUnique({ where: { id }, include: { categoria: true } });
+  if (!gasto || gasto.categoria.usuarioId !== usuarioId) {
+    throw new Error("Gasto inválido");
+  }
+
+  const categoria = await prisma.categoria.findUnique({ where: { id: categoriaId } });
+  if (!categoria || categoria.usuarioId !== usuarioId) {
+    throw new Error("Categoría inválida");
+  }
+
+  const actualizado = await prisma.gasto.update({
+    where: { id },
+    data: { categoriaId, monto, fecha: new Date(fecha), descripcion },
+    include: { categoria: true },
+  });
+  return actualizado;
+}
+
 export async function borrarGasto(id: number) {
   const usuarioId = await obtenerUsuarioId();
   const gasto = await prisma.gasto.findUnique({
@@ -43,6 +69,44 @@ export async function borrarGasto(id: number) {
   }
 
   await prisma.gasto.delete({ where: { id } });
+}
+
+export async function obtenerIngresos() {
+  const usuarioId = await obtenerUsuarioId();
+  const ingresos = await prisma.ingreso.findMany({ where: { usuarioId } });
+  return ingresos;
+}
+
+export async function crearIngreso(monto: number, fecha: string, descripcion: string) {
+  const usuarioId = await obtenerUsuarioId();
+  const nuevoIngreso = await prisma.ingreso.create({
+    data: { usuarioId, monto, fecha: new Date(fecha), descripcion },
+  });
+  return nuevoIngreso;
+}
+
+export async function actualizarIngreso(id: number, monto: number, fecha: string, descripcion: string) {
+  const usuarioId = await obtenerUsuarioId();
+  const ingreso = await prisma.ingreso.findUnique({ where: { id } });
+  if (!ingreso || ingreso.usuarioId !== usuarioId) {
+    throw new Error("Ingreso inválido");
+  }
+
+  const actualizado = await prisma.ingreso.update({
+    where: { id },
+    data: { monto, fecha: new Date(fecha), descripcion },
+  });
+  return actualizado;
+}
+
+export async function borrarIngreso(id: number) {
+  const usuarioId = await obtenerUsuarioId();
+  const ingreso = await prisma.ingreso.findUnique({ where: { id } });
+  if (!ingreso || ingreso.usuarioId !== usuarioId) {
+    throw new Error("Ingreso inválido");
+  }
+
+  await prisma.ingreso.delete({ where: { id } });
 }
 
 export async function crearCategoria(nombre: string, limite: number, color: string) {

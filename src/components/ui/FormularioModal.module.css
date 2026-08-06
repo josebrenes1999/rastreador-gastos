@@ -1,0 +1,41 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.etiqueta {
+  font-size: 12px;
+  color: var(--texto-apagado);
+  margin-top: 6px;
+}
+
+.input {
+  padding: 10px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.boton {
+  padding: 10px 16px;
+  background-color: var(--acento);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 14px;
+}
+
+.boton:hover {
+  background-color: var(--acento-oscuro);
+}
+
+.aviso {
+  font-size: 14px;
+  color: var(--texto-apagado);
+}

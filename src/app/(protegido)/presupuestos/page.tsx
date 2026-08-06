@@ -10,7 +10,8 @@ import {
 import { calcularDiaCiclo, estaEnCicloActual } from "../../../lib/ciclo";
 import { coloresPredefinidos } from "../../../lib/colores";
 import { textoADecimal } from "../../../lib/numeros";
-import CampoDecimal from "../../../components/CampoDecimal";
+import { calcularEstado, type Estado } from "../../../lib/estadoPresupuesto";
+import CampoDecimal from "../../../components/ui/CampoDecimal";
 import styles from "./page.module.css";
 
 type Categoria = {
@@ -31,15 +32,6 @@ type Configuracion = {
   cicloInicio: Date;
   cicloDuracionDias: number;
 };
-
-type Estado = "SALUDABLE" | "CONTROLADO" | "ALERTA" | "COMPLETADO";
-
-function calcularEstado(ratio: number): Estado {
-  if (ratio >= 1) return "COMPLETADO";
-  if (ratio >= 0.8) return "ALERTA";
-  if (ratio >= 0.5) return "CONTROLADO";
-  return "SALUDABLE";
-}
 
 const claseEstado: Record<Estado, string> = {
   SALUDABLE: "estadoSaludable",

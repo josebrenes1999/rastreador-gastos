@@ -24,9 +24,15 @@
   color: var(--texto-apagado);
 }
 
+.filaStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
 .filaSuperior {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 20px;
 }
 
@@ -44,6 +50,26 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+}
+
+.tarjetaCabecera .tituloTarjeta {
+  margin-bottom: 0;
+}
+
+.cabeceraAcciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.enlaceVerTodo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--acento);
+}
+
+.enlaceVerTodo:hover {
+  text-decoration: underline;
 }
 
 .etiqueta {
@@ -69,51 +95,10 @@
   color: var(--foreground);
 }
 
-.gastoTotal {
-  font-size: 26px;
-  margin-bottom: 20px;
-}
-
-.gastoTotal strong {
-  color: var(--acento);
-}
-
 .tituloTarjeta {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 16px;
-}
-
-.miniStats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.miniStat {
-  background-color: var(--superficie-hover);
-  border-radius: 8px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.miniStatAncho {
-  grid-column: 1 / -1;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.miniEtiqueta {
-  font-size: 12px;
-  color: var(--texto-apagado);
-}
-
-.miniValor {
-  font-size: 16px;
-  font-weight: 700;
 }
 
 .positivo {
@@ -124,8 +109,49 @@
   color: var(--peligro);
 }
 
-.formularioConfig,
-.formulario {
+/* Tarjetas de estadística (Total Balance / Ingresos / Gasto Total) */
+
+.statCabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.statIcono {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.iconoAcento {
+  background-color: rgba(45, 212, 191, 0.15);
+  color: var(--acento);
+}
+
+.iconoPeligro {
+  background-color: rgba(220, 38, 38, 0.15);
+  color: var(--peligro);
+}
+
+.statValor {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* Progreso del presupuesto */
+
+.pctRestante {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.formularioConfig {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -146,95 +172,6 @@
   font-size: 14px;
 }
 
-.filaDoble {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.filaCategoria {
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.botonSecundario {
-  padding: 10px 14px;
-  background: none;
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  color: var(--acento);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.botonSecundario:hover {
-  background-color: var(--superficie-hover);
-}
-
-.anclaDesplegable {
-  position: relative;
-}
-
-.subFormulario {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: 260px;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  background-color: var(--superficie);
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  padding: 12px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-}
-
-.paletaColores {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.swatch {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  cursor: pointer;
-  padding: 0;
-}
-
-.swatch:hover {
-  transform: scale(1.1);
-}
-
-.swatchSeleccionado {
-  border-color: var(--foreground);
-}
-
-.swatchPersonalizado {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid var(--borde);
-  padding: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 .boton {
   padding: 10px 16px;
   background-color: var(--acento);
@@ -251,10 +188,123 @@
   background-color: var(--acento-oscuro);
 }
 
+.barraProgreso {
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--superficie-hover);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.barraRelleno {
+  height: 100%;
+  background-color: var(--acento);
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.filaPresupuestoMensual {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--texto-apagado);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.dosCajas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cajaMini {
+  background-color: var(--superficie-hover);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cajaEtiqueta {
+  font-size: 12px;
+  color: var(--texto-apagado);
+}
+
+.cajaValor {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.infoCiclo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(45, 212, 191, 0.08);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--acento);
+}
+
+.infoCiclo svg {
+  flex-shrink: 0;
+}
+
+/* Categorías */
+
+.listaCategorias {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.filaCategoriaDist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filaCategoriaCabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nombreCategoriaDist {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pctCategoriaDist {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--texto-apagado);
+}
+
+.barraFina {
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--superficie-hover);
+  overflow: hidden;
+}
+
+.barraFinaRelleno {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
 .aviso {
   font-size: 14px;
   color: var(--texto-apagado);
 }
+
+/* Últimos movimientos */
 
 .tablaContenedor {
   overflow-x: auto;
@@ -290,16 +340,26 @@
   letter-spacing: 0.03em;
 }
 
+.badgeIngreso {
+  background-color: rgba(45, 212, 191, 0.15);
+  color: var(--acento);
+}
+
 .celdaApagada {
   color: var(--texto-apagado);
 }
 
-.importe {
-  font-weight: 600;
-  color: var(--peligro);
+.accionesFila {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.botonBorrar {
+.botonBorrar,
+.botonEditar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
@@ -307,8 +367,19 @@
   opacity: 0.7;
 }
 
-.botonBorrar:hover {
+.botonBorrar:hover,
+.botonEditar:hover {
   opacity: 1;
+}
+
+.importeNegativo {
+  font-weight: 600;
+  color: var(--peligro);
+}
+
+.importePositivo {
+  font-weight: 600;
+  color: var(--acento);
 }
 
 @media (max-width: 800px) {
@@ -316,25 +387,15 @@
     padding: 24px 16px;
   }
 
-  .filaSuperior {
+  .filaStats {
     grid-template-columns: 1fr;
   }
 
-  .miniStats {
+  .filaSuperior {
     grid-template-columns: 1fr;
   }
 
   .tarjeta {
     padding: 20px;
-  }
-
-  .subFormulario {
-    width: min(260px, calc(100vw - 64px));
-  }
-}
-
-@media (max-width: 480px) {
-  .filaDoble {
-    grid-template-columns: 1fr;
   }
 }

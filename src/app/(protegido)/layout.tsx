@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "../../auth";
-import Sidebar from "../../components/Sidebar";
-import styles from "./layout.module.css";
+import ShellProtegido from "../../components/layout/ShellProtegido";
 
 export default async function LayoutProtegido({
   children,
@@ -15,9 +14,8 @@ export default async function LayoutProtegido({
   }
 
   return (
-    <div className={styles.app}>
-      <Sidebar nombre={session.user.name ?? ""} email={session.user.email ?? ""} />
-      <div className={styles.contenido}>{children}</div>
-    </div>
+    <ShellProtegido nombre={session.user.name ?? ""} email={session.user.email ?? ""}>
+      {children}
+    </ShellProtegido>
   );
 }

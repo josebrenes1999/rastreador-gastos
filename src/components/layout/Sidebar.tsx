@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cerrarSesion } from "../authActions";
+import { cerrarSesion } from "../../authActions";
 import styles from "./Sidebar.module.css";
 
 const enlaces = [
@@ -16,9 +16,11 @@ const enlaces = [
 type SidebarProps = {
   nombre: string;
   email: string;
+  onAbrirGasto: () => void;
+  onAbrirIngreso: () => void;
 };
 
-function Sidebar({ nombre, email }: SidebarProps) {
+function Sidebar({ nombre, email, onAbrirGasto, onAbrirIngreso }: SidebarProps) {
   const pathname = usePathname();
   const [menuAbierto, setMenuAbierto] = useState(false);
 
@@ -56,6 +58,28 @@ function Sidebar({ nombre, email }: SidebarProps) {
             </Link>
           ))}
         </nav>
+        <div className={styles.accionesRapidas}>
+          <button
+            type="button"
+            className={styles.botonAccion}
+            onClick={() => {
+              setMenuAbierto(false);
+              onAbrirGasto();
+            }}
+          >
+            + Añadir Gasto
+          </button>
+          <button
+            type="button"
+            className={styles.botonAccion}
+            onClick={() => {
+              setMenuAbierto(false);
+              onAbrirIngreso();
+            }}
+          >
+            + Añadir Ingreso
+          </button>
+        </div>
         <button className={styles.cerrarSesion} onClick={() => cerrarSesion()}>
           Cerrar sesión
         </button>

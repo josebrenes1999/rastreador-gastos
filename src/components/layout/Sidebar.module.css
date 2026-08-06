@@ -89,6 +89,28 @@
   background-color: var(--acento);
 }
 
+.accionesRapidas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.botonAccion {
+  padding: 10px 12px;
+  background-color: var(--acento);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botonAccion:hover {
+  background-color: var(--acento-oscuro);
+}
+
 .cerrarSesion {
   background: none;
   border: 1px solid var(--borde);

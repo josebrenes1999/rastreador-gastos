@@ -16,6 +16,15 @@ model Gasto {
   categoria   Categoria @relation(fields: [categoriaId], references: [id])
 }
 
+model Ingreso {
+  id          Int      @id @default(autoincrement())
+  monto       Float
+  fecha       DateTime
+  descripcion String
+  usuarioId   Int
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
+}
+
 model Categoria {
   id        Int     @id @default(autoincrement())
   nombre    String
@@ -33,6 +42,7 @@ model Usuario {
   contrasenaHash     String
   creadoEn           DateTime    @default(now())
   categorias         Categoria[]
+  ingresos           Ingreso[]
   presupuestoMensual Float       @default(0)
   cicloInicio        DateTime    @default(now())
   cicloDuracionDias  Int         @default(30)

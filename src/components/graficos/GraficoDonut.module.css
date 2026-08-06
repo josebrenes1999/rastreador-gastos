@@ -1,0 +1,74 @@
+.contenedor {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.svg {
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.pista {
+  fill: none;
+  stroke: var(--superficie-hover);
+}
+
+.segmento {
+  cursor: pointer;
+  transition: stroke-width 0.15s ease;
+}
+
+.totalValor {
+  font-size: 20px;
+  font-weight: 700;
+  fill: var(--foreground);
+}
+
+.totalEtiqueta {
+  font-size: 10px;
+  fill: var(--texto-apagado);
+}
+
+.leyenda {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  list-style: none;
+}
+
+.filaLeyenda {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filaActiva {
+  background-color: var(--superficie-hover);
+}
+
+.punto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.nombreLeyenda {
+  font-size: 13px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.valorLeyenda {
+  font-size: 12px;
+  color: var(--texto-apagado);
+  white-space: nowrap;
+}

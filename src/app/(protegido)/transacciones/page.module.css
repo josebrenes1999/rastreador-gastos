@@ -1,0 +1,223 @@
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cabeceraFila {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.titulo {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.subtitulo {
+  font-size: 14px;
+  color: var(--texto-apagado);
+  margin-top: 4px;
+}
+
+.botonSecundario {
+  padding: 10px 16px;
+  background: none;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  color: var(--acento);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.botonSecundario:hover {
+  background-color: var(--superficie-hover);
+}
+
+.botonSecundario:disabled {
+  color: var(--texto-apagado);
+  cursor: not-allowed;
+}
+
+.filaControles {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.input {
+  padding: 10px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--superficie);
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.filaControles .input:first-child {
+  flex: 1;
+  min-width: 220px;
+}
+
+.totalCaja {
+  flex-shrink: 0;
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--acento);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.totalNegativo {
+  color: var(--peligro);
+}
+
+.tarjeta {
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.aviso {
+  font-size: 14px;
+  color: var(--texto-apagado);
+}
+
+.tablaContenedor {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--texto-apagado);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla td {
+  padding: 12px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--borde);
+  white-space: nowrap;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.badgeIngreso {
+  background-color: rgba(45, 212, 191, 0.15);
+  color: var(--acento);
+}
+
+.celdaApagada {
+  color: var(--texto-apagado);
+}
+
+.importe {
+  font-weight: 600;
+  color: var(--peligro);
+}
+
+.importePositivo {
+  font-weight: 600;
+  color: var(--acento);
+}
+
+.accionesFila {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.botonBorrar,
+.botonEditar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.botonBorrar:hover,
+.botonEditar:hover {
+  opacity: 1;
+}
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.botonPagina {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  background: none;
+  color: var(--foreground);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.botonPagina:hover:not(:disabled) {
+  background-color: var(--superficie-hover);
+}
+
+.botonPagina:disabled {
+  color: var(--texto-apagado);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.textoPagina {
+  font-size: 13px;
+  color: var(--texto-apagado);
+}
+
+@media (max-width: 800px) {
+  .main {
+    padding: 24px 16px;
+  }
+
+  .tarjeta {
+    padding: 16px;
+  }
+
+  .filaControles .input:first-child {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+}
