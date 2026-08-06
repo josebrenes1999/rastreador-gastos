@@ -24,7 +24,16 @@ function CampoDecimal({ className, placeholder, valor, onCambiar }: CampoDecimal
 
   return (
     <div className={styles.contenedor}>
-      <input className={className} placeholder={placeholder} value={valor} onChange={(e) => manejarCambio(e.target.value)} />
+      <div className={styles.campoConSufijo}>
+        <input
+          className={className}
+          style={{ paddingRight: "32px" }}
+          placeholder={placeholder}
+          value={valor}
+          onChange={(e) => manejarCambio(e.target.value)}
+        />
+        <span className={styles.sufijo}>€</span>
+      </div>
       {error && <p className={styles.error}>{error}</p>}
     </div>
   );

@@ -193,7 +193,7 @@ export default function Presupuestos() {
               <label className={styles.etiquetaCampo}>Límite mensual</label>
               <CampoDecimal
                 className={styles.input}
-                placeholder="0,00€"
+                placeholder="0,00"
                 valor={limiteCategoria}
                 onCambiar={setLimiteCategoria}
               />

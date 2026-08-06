@@ -94,7 +94,7 @@ function ShellProtegido({ nombre, email, children }: ShellProtegidoProps) {
                 <label className={formStyles.etiqueta}>Importe</label>
                 <CampoDecimal
                   className={formStyles.input}
-                  placeholder="0,00€"
+                  placeholder="0,00"
                   valor={montoGasto}
                   onCambiar={setMontoGasto}
                 />
@@ -127,7 +127,7 @@ function ShellProtegido({ nombre, email, children }: ShellProtegidoProps) {
             <label className={formStyles.etiqueta}>Importe</label>
             <CampoDecimal
               className={formStyles.input}
-              placeholder="0,00€"
+              placeholder="0,00"
               valor={montoIngreso}
               onCambiar={setMontoIngreso}
             />
