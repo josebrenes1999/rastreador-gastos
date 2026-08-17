@@ -39,3 +39,42 @@
   font-size: 14px;
   color: var(--texto-apagado);
 }
+
+.error {
+  font-size: 13px;
+  color: var(--peligro);
+}
+
+.paletaColores {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.swatch:hover {
+  transform: scale(1.1);
+}
+
+.swatchSeleccionado {
+  border-color: var(--foreground);
+}
+
+.swatchPersonalizado {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}

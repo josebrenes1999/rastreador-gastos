@@ -117,6 +117,35 @@ export async function crearCategoria(nombre: string, limite: number, color: stri
   return nuevaCategoria;
 }
 
+export async function actualizarCategoria(id: number, nombre: string, limite: number, color: string) {
+  const usuarioId = await obtenerUsuarioId();
+  const categoria = await prisma.categoria.findUnique({ where: { id } });
+  if (!categoria || categoria.usuarioId !== usuarioId) {
+    throw new Error("Categoría inválida");
+  }
+
+  const actualizada = await prisma.categoria.update({
+    where: { id },
+    data: { nombre, limite, color },
+  });
+  return actualizada;
+}
+
+export async function borrarCategoria(id: number) {
+  const usuarioId = await obtenerUsuarioId();
+  const categoria = await prisma.categoria.findUnique({ where: { id } });
+  if (!categoria || categoria.usuarioId !== usuarioId) {
+    throw new Error("Categoría inválida");
+  }
+
+  const gastosAsociados = await prisma.gasto.count({ where: { categoriaId: id } });
+  if (gastosAsociados > 0) {
+    throw new Error("No puedes borrar una categoría con gastos. Bórralos o cámbialos de categoría primero.");
+  }
+
+  await prisma.categoria.delete({ where: { id } });
+}
+
 export async function obtenerCategorias() {
   const usuarioId = await obtenerUsuarioId();
   const categorias = await prisma.categoria.findMany({ where: { usuarioId } });

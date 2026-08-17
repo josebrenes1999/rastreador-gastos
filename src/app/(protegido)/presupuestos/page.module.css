@@ -149,8 +149,49 @@
 .categoriaCabecera {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   margin-bottom: 10px;
+}
+
+.categoriaNombreFila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.categoriaAcciones {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.botonEditar,
+.botonBorrar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.botonEditar:hover,
+.botonBorrar:hover {
+  opacity: 1;
+}
+
+.errorCategoria {
+  font-size: 13px;
+  color: var(--peligro);
+  background-color: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 8px;
+  padding: 10px 12px;
 }
 
 .puntoColor {

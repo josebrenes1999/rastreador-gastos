@@ -5,6 +5,7 @@ import {
   obtenerGastos,
   obtenerCategorias,
   crearCategoria,
+  borrarCategoria as borrarCategoriaDB,
   obtenerConfiguracion,
 } from "../../../actions";
 import { calcularDiaCiclo, estaEnCicloActual } from "../../../lib/ciclo";
@@ -12,6 +13,8 @@ import { coloresPredefinidos } from "../../../lib/colores";
 import { textoADecimal } from "../../../lib/numeros";
 import { calcularEstado, type Estado } from "../../../lib/estadoPresupuesto";
 import CampoDecimal from "../../../components/ui/CampoDecimal";
+import ModalEditarCategoria from "../../../components/categorias/ModalEditarCategoria";
+import IconoEditar from "../../../components/ui/IconoEditar";
 import styles from "./page.module.css";
 
 type Categoria = {
@@ -49,6 +52,8 @@ export default function Presupuestos() {
   const [nombreCategoria, setNombreCategoria] = useState("");
   const [limiteCategoria, setLimiteCategoria] = useState("");
   const [colorCategoria, setColorCategoria] = useState(coloresPredefinidos[0]);
+  const [editandoCategoria, setEditandoCategoria] = useState<Categoria | null>(null);
+  const [errorCategoria, setErrorCategoria] = useState("");
 
   useEffect(() => {
     async function cargarDatos() {
@@ -72,6 +77,23 @@ export default function Presupuestos() {
     setLimiteCategoria("");
     setColorCategoria(coloresPredefinidos[0]);
     setMostrarFormCategoria(false);
+  }
+
+  async function recargarCategorias() {
+    const datosCategorias = await obtenerCategorias();
+    setCategorias(datosCategorias);
+    setEditandoCategoria(null);
+  }
+
+  async function borrarCategoriaClick(id: number) {
+    setErrorCategoria("");
+    try {
+      await borrarCategoriaDB(id);
+      const datosCategorias = await obtenerCategorias();
+      setCategorias(datosCategorias);
+    } catch (error) {
+      setErrorCategoria(error instanceof Error ? error.message : "No se pudo borrar la categoría.");
+    }
   }
 
   const gastosDelCiclo = configuracion
@@ -152,12 +174,24 @@ export default function Presupuestos() {
         </div>
       )}
 
+      {errorCategoria && <p className={styles.errorCategoria}>{errorCategoria}</p>}
+
       <div className={styles.gridCategorias}>
         {categoriasConProgreso.map(({ categoria, gastado, ratio, estado }) => (
           <div key={categoria.id} className={styles.tarjetaCategoria}>
             <div className={styles.categoriaCabecera}>
-              <span className={styles.puntoColor} style={{ backgroundColor: categoria.color }} />
-              <span className={styles.nombreCategoria}>{categoria.nombre}</span>
+              <div className={styles.categoriaNombreFila}>
+                <span className={styles.puntoColor} style={{ backgroundColor: categoria.color }} />
+                <span className={styles.nombreCategoria}>{categoria.nombre}</span>
+              </div>
+              <div className={styles.categoriaAcciones}>
+                <button className={styles.botonEditar} onClick={() => setEditandoCategoria(categoria)}>
+                  <IconoEditar />
+                </button>
+                <button className={styles.botonBorrar} onClick={() => borrarCategoriaClick(categoria.id)}>
+                  🗑
+                </button>
+              </div>
             </div>
             <p className={styles.montos}>
               {gastado.toFixed(2)} € <span className={styles.limiteTexto}>Límite: {categoria.limite.toFixed(2)} €</span>
@@ -239,6 +273,14 @@ export default function Presupuestos() {
           )}
         </div>
       </div>
+
+      {editandoCategoria && (
+        <ModalEditarCategoria
+          categoria={editandoCategoria}
+          onCerrar={() => setEditandoCategoria(null)}
+          onGuardado={recargarCategorias}
+        />
+      )}
     </main>
   );
 }
